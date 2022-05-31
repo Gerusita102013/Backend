@@ -12,9 +12,15 @@ class RolController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    //MOSTRAR
     public function index()
     {
-        //
+        $datos=Rol::all();
+        $num_rows = count($datos);
+        if($num_rows != 0){
+            return response()->json(['data'=>$datos, 'code'=>'200']);
+        }else
+            return response()->json(['code'=>'204']);
     }
 
     /**
@@ -33,9 +39,19 @@ class RolController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+      //INGRESAR
+     public function store(Request $request)
     {
-        //
+        $valida=Rol::where('nombre_rol', $request->nombre_rol)->get()->first();
+        if($valida != null){
+            return response()->json(['code'=>'400']);
+        }else{
+            $datos=new Rol();
+            $datos->nombre_rol=$request->nombre_rol;
+            $datos->estado_rol=$request->estado_rol;
+            $datos->save();
+            return response()->json(['code'=>'200']);
+        }
     }
 
     /**
@@ -67,9 +83,17 @@ class RolController extends Controller
      * @param  \App\Models\Rol  $rol
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Rol $rol)
+      //ACTUlizar_modificar
+     public function update(Request $request, $id_rol)
     {
-        //
+        $datos=Rol::where('id_rol',$id_rol)->get()->first();
+        if($datos != null){
+            $datos->nombre_rol=$request->nombre_rol;
+            $datos->estado_rol=$request->estado_rol;
+            $datos->update();
+            return response()->json(['code'=>'200']);
+        }else
+            return response()->json(['code'=>'204']);
     }
 
     /**
@@ -78,8 +102,14 @@ class RolController extends Controller
      * @param  \App\Models\Rol  $rol
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Rol $rol)
+      //eliminar
+     public function destroy($id_rol)
     {
-        //
+        $datos=Rol::find($id_rol);  
+        if($datos != null){
+            $datos->delete();
+            return response()->json(['code'=>'200']);
+        }else
+            return response()->json(['code'=>'204']);
     }
 }

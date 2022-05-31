@@ -11,5 +11,5 @@ class Rol extends Model
     public $timestamps=false;
     protected $table= 'roles';
     protected $primaryKey='id_rol';
-    protected $fiable= [ 'nombre_rol'];
+    protected $fiable= [ 'nombre_rol', 'estado_rol'];
 }
