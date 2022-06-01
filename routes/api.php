@@ -21,6 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::resource('roles','App\Http\Controllers\RolController');
+Route::resource('docente','App\Http\Controllers\DocenteController');
 
 //Rutas externas
 //Route::post('ActualizarImagen','ImagenController@actualizar');

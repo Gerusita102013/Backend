@@ -14,8 +14,14 @@ class DocenteController extends Controller
      */
     public function index()
     {
-        //
+        $datos=Docente::with('r_carrera')->get();
+        $num_rows = count($datos);
+        if($num_rows != 0){
+            return response()->json(['data'=>$datos, 'code'=>'200']);
+        }else
+            return response()->json(['code'=>'204']);
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -35,7 +41,21 @@ class DocenteController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $valida=Docente::where('correo_docente', $request->correo_docente)->get()->first();
+        if($valida != null){
+            return response()->json(['code'=>'400']);
+        }else{
+            
+            $datos=new Docente();
+            $datos->id_carrera=$request->id_carrera;
+            $datos->nombres_docente=$request->nombres_docente;
+            $datos->apellidos_docente=$request->apellidos_docente;
+            $datos->correo_docente=$request->correo_docente;
+            $datos->clave_docente=$request->clave_docente;
+            
+            $datos->save();
+            return response()->json(['code'=>'200']);
+        }
     }
 
     /**
@@ -67,9 +87,19 @@ class DocenteController extends Controller
      * @param  \App\Models\Docente  $docente
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Docente $docente)
+    public function update(Request $request, $id_docente)
     {
-        //
+        $datos=Docente::where('id_docente',$id_docente)->get()->first();
+        if($datos != null){
+            $datos->id_carrera=$request->id_carrera;
+            $datos->nombres_docente=$request->nombres_docente;
+            $datos->apellidos_docente=$request->apellidos_docente;
+            $datos->correo_docente=$request->correo_docente;
+            $datos->clave_docente=$request->clave_docente;
+            $datos->update();
+            return response()->json(['code'=>'200']);
+        }else
+            return response()->json(['code'=>'204']);
     }
 
     /**
@@ -78,8 +108,13 @@ class DocenteController extends Controller
      * @param  \App\Models\Docente  $docente
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Docente $docente)
+    public function destroy( $id_docente)
     {
-        //
+        $datos=Docente::find($id_docente);  
+        if($datos != null){
+            $datos->delete();
+            return response()->json(['code'=>'200']);
+        }else
+            return response()->json(['code'=>'204']);
     }
 }
